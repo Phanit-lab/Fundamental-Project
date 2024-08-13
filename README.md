@@ -3,40 +3,41 @@ This is my final project of fundamental programing in C++
 # Fist Projet is Coures Management System
 This project use comment line to run 
 +	Course and Curriculum Management:
-    o	User Management
-    -	Registration 
-    -	Login 
-    o	Student and Teacher Information
-            -	Add
+    *  	User Management
+        -	Registration 
+        -	Login 
+    *	Student and Teacher Information
+        -	Add
             *	ID
             *	Name
             *	Age
             *	Role 
-    o	Student 
-    -	Class
-    -	Score 
-    	Teacher
-    -	Class
-    o	Course Planning
-    -	Add course
+    *	Student 
+        -	Class
+        -	Score 
+    *	Teacher
+        -	Class
+    *	Course Planning
+        -	Add course
             *	Create 
             *	Edit 
             *	Delete 
             *	Teacher
-    -	Short
+        -	Short
             *	Name
             *	ID
-    -	Search 
-    -	Delete
-    -	Update
-    -	Display
+        -	Search
+            *   ID
+        -	Delete
+        -	Update
+        -	Display
     -	Save
-    o	Report Course and Curriculum Information
-    -	Report user accounts
-    -	Report class information
-    -	Report the most student in-class information 
-    -	Report the most student favorite class
-    -	Report top teacher class.
+    *	Report Course and Curriculum Information
+        -	Report user accounts
+        -	Report class information
+        -	Report the most student in-class information 
+        -	Report the most student favorite class
+        -	Report top teacher class.
 
 # Second Projenct is Guessing Word Game
     I.	Authentication 
