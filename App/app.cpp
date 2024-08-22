@@ -106,7 +106,7 @@ void userMenu(int user)
         };
     case ADMIN:
     {
-
+u
         break;
     }
     case PLAYER:
