@@ -1,42 +1,92 @@
-#include<iostream>
-using  namespace std;
+#include <iostream>
+#include "Function/display.cpp"
+using namespace std;
 
+// Function declaration
+bool login(string username, string password);
+void controlMenu(int control);
+void adminMenu(int choise);
+void registerUser();
 
-// Display Fuunction
-void displayMenuLogin(){
-    cout<< "----------MENU----------"<<endl;
-    cout<< "1. Register"<<endl;
-    cout<< "2. Login"<<endl;
-    cout<< "0. Exit the program"<<endl;
-    cout<< "------------------------"<<endl;
-    cout<< "Enter your chooise: ";
+// Main Function
+
+int main()
+{
+    int loginChoice;
+
+    do
+    {
+        displayMenuLogin();
+        cin >> loginChoice;
+        switch (loginChoice)
+        {
+            enum
+            {
+                EXIT,
+                REGISTER,
+                LOGIN
+            };
+        case REGISTER:
+            registerUser();
+            break;
+        case LOGIN:
+        {
+            string username, password;
+            cout << BRIGHT_BLUE << "-------LOGIN_MENU-------" << RESET << endl;
+            cout << "Enter username: ";
+            cin >> username;
+            cout << "Enter password: ";
+            cin >> password;
+            if (login(username, password))
+            {
+                int choise;
+                cout << GREEN << "Login Successful!!" << RESET << endl;
+                do
+                {
+                    displayMenuAdmin();
+                    cin >> choise;
+                    adminMenu(choise);
+                } while (choise != 0);
+            }
+            else
+            {
+                cout << RED << "Incorect username or password" << RESET << endl;
+            }
+
+            break;
+        }
+        case EXIT:
+            cout << RED << "The Program is Exited" << RESET << endl;
+            exit(0);
+            break;
+        default:
+            cout << RED << "Invalid choice!" << RESET << endl;
+            break;
+        }
+    } while (loginChoice != 0);
+
+    return 0;
 }
-void displayMenuAdmin(){
-    cout<< "-------ADMIN_MENU-------"<<endl;
-    cout<< "1. Word Control"<<endl;
-    cout<< "2. User Account Control"<<endl;
-    cout<< "0. Back to MENU"<<endl;
-    cout<< "------------------------"<<endl;
-    cout<< "Enter your chooise: ";
 
+/*
+All Function
+*/
+bool login(string username, string password)
+{
+    string keyName = "phanit";
+    string keyPassword = "123";
+    if (username == keyName && password == keyPassword)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
-void displayMenuControl(string control){
-    cout<< "-------"<<control<<"_CONTROL-------"<<endl;
-    cout<< "1. Add "<<control<<endl;
-    cout<< "2. Edit "<<control<<endl;
-    cout<< "3. Delete "<<control<<endl;
-    cout<< "4. Search "<<control<<endl;
-    cout<< "5. Short "<<control<<endl;
-    cout<< "6. Display "<<control<<endl;
-    cout<< "0. Back to ADMIN_MENU"<<endl;
-    cout<< "------------------------"<<endl;
-    cout<< "Enter your chooise: ";
 
-}
-// Control Menu Funtion
 void controlMenu(int control)
 {
-
     switch (control)
     {
         enum Menu
@@ -51,129 +101,118 @@ void controlMenu(int control)
         };
     case ADD:
     {
-        cout << "ADD..." << endl;
+        cout << GREEN << "ADD... Successful!!" << RESET << endl;
         break;
     }
     case EDIT:
     {
-        cout << "EDIT.." << endl;
+        cout << GREEN << "EDIT... Successful!!" << RESET << endl;
         break;
     }
     case DELETE:
     {
-        cout << "DELETE..." << endl;
+        cout << GREEN << "DELETE... Successful!!" << RESET << endl;
         break;
     }
     case SEARCH:
     {
-        cout << "SEARCH..." << endl;
+        cout << GREEN << "SEARCH... Successful!!" << RESET << endl;
         break;
     }
     case SHORT:
     {
-        cout << "SHORT..." << endl;
+        cout << GREEN << "SHORT... Successful!!" << RESET << endl;
         break;
     }
     case DISPLAY:
     {
-        cout << "DISPLAY..." << endl;
+        cout << GREEN << "DISPLAY... Successful!!" << RESET << endl;
         break;
     }
     case EXIT:
     {
-        cout << "Back to the USER Menu..." << endl;
-        displayMenuLogin();
-        
+        cout << YELLOW << "Back to the USER Menu..." << RESET << endl;
         break;
     }
 
     default:
     {
+        cout<<RED<<"Invalid choise"<<RESET<<endl;
         break;
     }
     }
 }
-void userMenu(int user)
+void adminMenu(int choise)
 {
-
-    switch (user)
-    {
-        enum Menu
-        {
-            EXIT,
-            ADMIN,
-            PLAYER
-        };
-    case ADMIN:
-    {
-u
-        break;
-    }
-    case PLAYER:
-    {
-        cout << "PLAYER." << endl;
-        break;
-    }
-    case EXIT:
-    {
-        cout << "Back to the Login Menu..." << endl;
-        break;
-    }
-
-    default:
-    {
-        break;
-    }
-    }
-}
-void loginMenu(int choise)
-{
-
     switch (choise)
     {
-        enum Menu
         {
-            EXIT,
-            REGISTER,
-            lOGIN
-        };
-    case REGISTER:
-    {
-        cout << "Register." << endl;
-        break;
-    }
-    case lOGIN:
-    {
-        int control, userControl;
-        string adminControl;
-        displayMenuAdmin();
-        cin >> control;
-        if (control == 1){
-            adminControl = "Word";
-        }if(control == 2){
-            adminControl = " User_Account";
-        }
-        displayMenuControl(adminControl);
-        cin>> userControl;
-        controlMenu(userControl);
-        break;
-    }
-    case EXIT:
-    {
-        cout << "The program is exited." << endl;
-        break;
-    }
+            int control;
 
-    default:
-    {
-        break;
-    }
+            enum Menu
+            {
+                EXIT,
+                WORD,
+                ACCOUNT,
+                PLAY
+            };
+        case WORD:
+        {
+            int controlWord;
+            do
+            {
+                displayMenuControl("WORD");
+                cin >> controlWord;
+                controlMenu(controlWord);
+            } while (controlWord != 0);
+            break;
+        }
+        case ACCOUNT:
+        {
+            int controlAccount;
+            do
+            {
+                displayMenuControl("ACCOUNT");
+                cin >> controlAccount;
+                controlMenu(controlAccount);
+            } while (controlAccount != 0);
+            break;
+        }
+        case PLAY:
+        {
+            cout << RED << "GAME_WILL_RELEASE_SOON" << RESET << endl;
+            break;
+        }
+        case EXIT:
+        {
+            cout << YELLOW << "Back to the Login Menu..." << RESET << endl;
+            break;
+        }
+
+        default:
+        {
+            break;
+        }
+        }
     }
 }
-
-int main(){
-    int menuchoise;
-    displayMenuLogin();
-    cin>>menuchoise;
-    loginMenu(menuchoise);
+void registerUser()
+{
+    string name, username, password, id, role;
+    cout << BRIGHT_BLUE << "---------REGISTER--------" << RESET << endl;
+    cout << " Name: ";
+    cin >> name;
+    cout << " username: ";
+    cin >> username;
+    cout << " Password: ";
+    cin >> password;
+    cout << " ID: ";
+    cin >> id;
+    cout << " Role: " << endl;
+    cout << " 1. Admin: " << endl;
+    cout << " 2. User " << endl;
+    cout << " Chouse role: ";
+    cin >> role;
+    cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
+    cout << GREEN << "Register Successful!!" << RESET << endl;
 }
