@@ -15,9 +15,15 @@ int main() {
   do {
     displayMenuLogin();
     cin >> loginChoice;
+    while (cin.fail()) {
+      cin.clear();
+      cin.ignore();
+      cout << "Invalid input. Please enter Number: ";
+      cin >> loginChoice;
+    }
     switch (loginChoice) {
       case REGISTER:
-        addUser(user, userCount);
+        addUser(user, userCount, MAX_USERS);
         break;
       case 6:
         displayUser(user, userCount);
@@ -31,12 +37,12 @@ int main() {
         cin >> username;
         cout << "Enter password: ";
         cin >> password;
-        if (login(user,username,password,userCount)) {
+        if (login(user, username, password, userCount)) {
           cout << GREEN << "Login Successful!!" << RESET << endl;
           do {
             displayMenuAdmin();
             cin >> choise;
-            adminMenu(choise, control, word, wordCount, user, userCount, control);
+            adminMenu(choise, word, wordCount, user, userCount,MAX_USERS);
           } while (choise != 0);
         } else {
           cout << RED << "Incorect username or password" << RESET << endl;
