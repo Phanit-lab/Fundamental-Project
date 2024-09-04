@@ -32,6 +32,7 @@
 *.app
 *.tmp
 *.docx
+*.pptx
 
 # other file
 ~$oject School Management System

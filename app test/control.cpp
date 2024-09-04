@@ -24,33 +24,29 @@ void controlMenuWord(int control, string word[], int& wordCount)
     case ADD: {
       addword(word, wordCount);
 
-
       break;
     }
     case EDIT: {
       string updateWord;
-      cout << "Enter Word you want to updated: ";
-      cin >> updateWord;
-      update(word, wordCount, updateWord, " word");
+      input(updateWord," Enter Word you want to updated: ");
+      update(word, wordCount, updateWord);
       cout << GREEN << "EDIT... Successful!!" << RESET << endl;
       break;
     }
     case DELETE: {
-      string delete_word;
-      cout << "Enter the word you want to delete: ";
-      cin >> delete_word;
-      deleteFunction(word, wordCount, delete_word);
+      string deleteWord;
+      input(deleteWord,"Enter the word you want to delete: ");
+      deleteFunction(word, wordCount, deleteWord);
       cout << GREEN << "DELETE... Successful!!" << RESET << endl;
       break;
     }
     case SEARCH: {
       string keyWord;
-      cout << "What word you want to search: ";
-      cin >> keyWord;
-      if(linearSearch(word, wordCount, keyWord)!=-1){
-      cout << GREEN << keyWord<<" alreay have" << RESET << endl;
-      }else{
-      cout << RED << keyWord<<" not found" << RESET << endl;
+      input(keyWord,"What word you want to search: ");
+      if (linearSearch(word, wordCount, keyWord) != -1) {
+        cout << GREEN << keyWord << " alreay have" << RESET << endl;
+      } else {
+        cout << RED << keyWord << " not found" << RESET << endl;
       }
       break;
     }
@@ -79,21 +75,19 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       break;
     }
     case EDIT: {
-      int edit, newId, newRole;
+      int edit, newId;
       string newName;
-      cout << "What do you want to eddit? " << endl;
-      cout << " 1. Name" << endl;
-      cout << " 2. ID" << endl;
-      cout<<"Enter choice:";
+      displayEditMenu();
+      input(edit,"Enter your chooise: ");
       cin >> edit;
       if (edit == 1) {
         cout << "Enter update Name: ";
         cin >> newName;
-        update(user, userCount, newName, " name");
+        update(user, userCount, newName);
       } else if (edit == 2) {
         cout << "Enter update ID: ";
         cin >> newId;
-        update(user, userCount, newId, " id");
+        update(user, userCount, newId);
       } else {
         cout << "Invalid Input" << endl;
       }
@@ -107,27 +101,26 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       int keyId;
       string keyName;
       int choice;
-      cout << "What word you want to search? " << endl;
-      cout << "1. By ID" << endl;
-      cout << "2. By Name" << endl;
-      cout<<"Enter choice: ";
-      cin >> choice;
-      while (cin.fail()) {
-          cin.clear();
-          cin.ignore();
-          cout << RED << "Invalid input." << RESET << endl;
-          cout << " Enter your choice " << endl;
-          cin >> choice;
-        }
+      displaySearchMenu();
+      input(choice,"Enter your chooise: ");
       if (choice == 1) {
         cout << " Enter ID: ";
         cin >> keyId;
-        displayEachUser(user, linearSearch(user, userCount, keyId));
+        if (linearSearch(user, userCount, keyId) != -1) {
+          displayEachUser(user, linearSearch(user, userCount, keyId));
+        } else {
+          cout << RED << "User not found" << RESET << endl;
+        }
+
         break;
       } else if (choice == 2) {
         cout << " Enter Name: ";
         cin >> keyName;
-        displayEachUser(user, linearSearch(user, userCount, keyName));
+        if (linearSearch(user, userCount, keyId) != -1) {
+          displayEachUser(user, linearSearch(user, userCount, keyName));
+        } else {
+          cout << RED << "User not found" << RESET << endl;
+        }
         break;
       } else {
         cout << RED << "Invalid Choise" << RESET << endl;
@@ -136,22 +129,12 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
     }
     case SHORT: {
       int keyShort;
-      cout << "What do you want to short?" << endl;
-      cout << "1. Name" << endl;
-      cout << "2. ID" << endl;
-      cout<<" Enter choice: ";
-      cin >> keyShort;
-        while (cin.fail()) {
-          cin.clear();
-          cin.ignore();
-          cout << RED << "Invalid input." << RESET << endl;
-          cout << " Enter your choice " << endl;
-          cin >> keyShort;
-        }
-        shortFunction(user, userCount, keyShort);
-        cout << GREEN << "Short User Successful!!" << RESET << endl;
-        break;
-      
+      displayShortMenu();
+      input(keyShort,"Enter your chooise: ");
+      shortFunction(user, userCount, keyShort);
+      cout << GREEN << "Short User Successful!!" << RESET << endl;
+      break;
+
       case DISPLAY: {
         displayUser(user, userCount);
         cout << GREEN << "DISPLAY... Successful!!" << RESET << endl;
@@ -176,13 +159,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       int controlWord;
       do {
         displayMenuControl("WORD");
-        cin >> controlWord;
-        while (cin.fail()) {
-          cin.clear();
-          cin.ignore();
-          cout << "Invalid input. Please enter Number: ";
-          cin >> controlWord;
-        }
+        input(controlWord,"Enter your chooise: ");
         controlMenuWord(controlWord, word, wordCount);
       } while (controlWord != 0);
       break;
@@ -191,14 +168,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       int controlAccount;
       do {
         displayMenuControl("ACCOUNT");
-        cin >> controlAccount;
-        while (cin.fail()) {
-          cin.clear();
-          cin.ignore();
-          cout << RED << "Invalid input." << RESET << endl;
-          cout << " Enter your choice " << endl;
-          cin >> controlAccount;
-        }
+        input(controlAccount,"Enter your chooise: ");
         controlMenuAccount(controlAccount, user, userCount, maxUser);
       } while (controlAccount != 0);
       break;

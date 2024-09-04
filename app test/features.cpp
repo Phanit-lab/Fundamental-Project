@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "displays.cpp"
 using namespace std;
@@ -22,19 +23,28 @@ bool login(User user[], string keyName, string keyPassword, int count) {
     }
   }
 }
-
-// Add Function (Register)
-void addword(string word[], int &currentcout) {
-  cout << BRIGHT_BLUE << "---------ADD_WORD--------" << RESET << endl;
-  int count;
-  cout << "How many words you want to add? : ";
-  cin >> count;
+// Input Function
+template <typename T>
+void input(T &inPut, const string &text) {
+  cout << text;
+  cin >> inPut;
   while (cin.fail()) {
     cin.clear();
-    cin.ignore();
-    cout << "Invalid input. Please enter number: ";
-    cin >> count;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << RED << "Invalid input. " << RESET;
+    cout << text;
+    cin >> inPut;
   }
+  cin.ignore(numeric_limits<streamsize>::max(),
+             '\n');  // (For switching between different tpye of input int, string)
+}
+// Add Function (Register)
+void addword(string word[], int &currentcout) {
+  int count;
+  cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
+  cout << "        ADD_WORD        " << endl;
+  cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
+  input(count, "How many words you want to add? : ");
   for (size_t i = 0; i < count; i++) {
     cout << "Word [" << currentcout + 1 << "] :";
     cin >> word[currentcout];
@@ -44,34 +54,22 @@ void addword(string word[], int &currentcout) {
 }
 void addUser(User user[], int &userCount, int maxUsers) {
   int count;
-  cout << BRIGHT_BLUE << "---------REGISTER--------" << RESET << endl;
-  cout << "How many users do you want to add?: ";
-  cin >> count;
-  while (cin.fail()) {
-    cin.clear();
-    cin.ignore();
-    cout << "Invalid input. Please enter Number: ";
-    cin >> count;
-  }
+  cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
+  cout << "        REGISTER        " << endl;
+  cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
+  input(count, "How many users do you want to add?: ");
   if (userCount + count > maxUsers) {
     cout << RED << "Error: Adding " << count << " users would exceed the maximum capacity of "
          << maxUsers << " users." << RESET << endl;
     return;
   }
   for (int i = 0; i < count; i++) {
-    cout << " Name: ";
-    cin >> user[userCount].name;
-    cout << " Username: ";
-    cin >> user[userCount].username;
-    cout << " Password: ";
-    cin >> user[userCount].password;
-    cout << " ID: ";
-    cin >> user[userCount].id;
-    cout << " Role: " << endl;
-    cout << " 1. Admin" << endl;
-    cout << " 2. User" << endl;
-    cout << " Choose role: ";
-    cin >> user[userCount].role;
+    input(user[userCount].name, " Name: ");
+    input(user[userCount].username, " Username: ");
+    input(user[userCount].password, " Password: ");
+    input(user[userCount].id, " ID: ");
+    displayRole();
+    input(user[userCount].role, "Choose role: ");
     cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
     cout << GREEN << "Register Successful!!" << RESET << endl;
     userCount++;
@@ -87,9 +85,9 @@ void displayWord(string word[], int &currentcout) {
   cout << GREEN << "Display Successful!!" << RESET << endl;
 }
 void displayUser(User user[], int count) {
-  cout << BRIGHT_BLUE << "=========== USER INFOMATTIONS ==========" << endl;
+  cout << BRIGHT_BLUE << "=========== USER INFOMATTIONS ==========" << RESET << endl;
   cout << "ID\t" << "Name\t  " << "Username\t" << "Role" << endl;
-  cout << "========================================" << RESET << endl;
+  cout << BRIGHT_BLUE << "========================================" << RESET << endl;
   for (int i = 0; i < count; i++) {
     cout << user[i].id << "\t" << user[i].name << "\t  " << user[i].username << "\t\t"
          << user[i].role << endl;
@@ -98,12 +96,11 @@ void displayUser(User user[], int count) {
   cout << GREEN << "Display Successful!!" << RESET << endl;
 }
 void displayEachUser(User user[], int index) {
-  cout << BRIGHT_BLUE << "===========USER INFOMATTIONS==========" << endl;
+  cout << BRIGHT_BLUE << "===========USER INFOMATTIONS==========" << RESET << endl;
   cout << "ID\t" << "Name\t" << "Username\t" << "Role" << endl;
   cout << user[index].id << "\t" << user[index].name << "\t" << user[index].username << "\t\t"
        << user[index].role << endl;
-  cout << "======================================" << RESET << endl;
-  cout << GREEN << "SEARCH... Successful!!" << RESET << endl;
+  cout << BRIGHT_BLUE << "======================================" << RESET << endl;
 }
 // Search Function (search for user by id and name)
 int linearSearch(string array[], int count, string key) {
@@ -131,11 +128,11 @@ int linearSearch(User user[], int count, int key) {
   return -1;
 }
 // Updated Function (User by name and id)
-void update(string array[], int count, string update, string text) {
+void update(string array[], int count, string update) {
   string newWord;
   int index = linearSearch(array, count, update);
   if (index != -1) {
-    cout << "Enter new " << text << " : ";
+    input(newWord, "Enter new Word: ");
     cin >> newWord;
     array[index] = newWord;
     cout << GREEN << newWord << " successfull updated" << endl;
@@ -143,28 +140,26 @@ void update(string array[], int count, string update, string text) {
     cout << newWord << " not found" << endl;
   }
 }
-void update(User user[], int count, string update, string name) {
+void update(User user[], int count, string update) {
   string newName;
   int index = linearSearch(user, count, update);
   if (index != -1) {
-    cout << "Enter new " << name << " : ";
-    cin >> newName;
+    input(newName, "Enter new name: ");
     user[index].name = newName;
-    cout << GREEN << name << " Successfull Updated" << endl;
+    cout << GREEN << newName << " Successfull Updated" << endl;
   } else {
-    cout << name << " not found" << endl;
+    cout << RED << newName << " not found" << RESET << endl;
   }
 }
-void update(User user[], int count, int update, string name) {
+void update(User user[], int count, int update) {
   int newId;
   int index = linearSearch(user, count, update);
   if (index != -1) {
-    cout << "Enter new " << name << " : ";
-    cin >> newId;
+    input(newId, "Enter new ID: ");
     user[index].id = newId;
-    cout << GREEN << name << " Successfull Updated" << endl;
+    cout << GREEN << newId << " Successfull Updated" << endl;
   } else {
-    cout << name << " not found" << endl;
+    cout << newId << " not found" << endl;
   }
 }
 // Swapping and Short Function
@@ -182,7 +177,7 @@ void swappingUser(User &a, User &b) {
 void shortWord(string arr[], int count) {
   for (int i = 0; i < count; i++) {
     for (int j = 0; j < count - i - 1; j++) {
-      if (arr[j] < arr[j + 1]) {
+      if (arr[j] > arr[j + 1]) {
         swappingWord(arr[j], arr[j + 1]);
       }
     }
@@ -226,22 +221,15 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
     cout << RED << "Word not found" << RESET << endl;
   }
 }
+
 void deleteUser(User users[], int &count) {
-  int id;
   bool userDelete = false;
-  cout << "Enter the ID of the User to delete: ";
-  cin >> id;
-  while (cin.fail()) {
-    cin.clear();
-    cin.ignore();
-    cout << RED << "Invalid input." << RESET << endl;
-    cout << " Please enter ID: " << endl;
-    cin >> id;
-  }
+  int id;
+  input(id, " Enter the ID of the User to delete:");
   for (int i = 0; i < count; i++) {
     if (users[i].id == id) {
-      users[i] = users[--count];
       cout << GREEN << "User" << users[i].name << " deleted successfully!" << RESET << endl;
+      users[i] = users[--count];
       userDelete = true;
     }
   }
