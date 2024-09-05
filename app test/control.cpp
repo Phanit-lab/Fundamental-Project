@@ -23,28 +23,25 @@ void controlMenuWord(int control, string word[], int& wordCount)
   switch (control) {
     case ADD: {
       addword(word, wordCount);
-
       break;
     }
     case EDIT: {
       string updateWord;
-      input(updateWord," Enter Word you want to updated: ");
+      input(updateWord, "Enter Word you want to updated: ");
       update(word, wordCount, updateWord);
-      cout << GREEN << "EDIT... Successful!!" << RESET << endl;
       break;
     }
     case DELETE: {
       string deleteWord;
-      input(deleteWord,"Enter the word you want to delete: ");
+      input(deleteWord, "Enter the word you want to delete: ");
       deleteFunction(word, wordCount, deleteWord);
-      cout << GREEN << "DELETE... Successful!!" << RESET << endl;
       break;
     }
     case SEARCH: {
       string keyWord;
-      input(keyWord,"What word you want to search: ");
+      input(keyWord, "What word you want to search: ");
       if (linearSearch(word, wordCount, keyWord) != -1) {
-        cout << GREEN << keyWord << " alreay have" << RESET << endl;
+        cout << GREEN << keyWord << " have in list" << RESET << endl;
       } else {
         cout << RED << keyWord << " not found" << RESET << endl;
       }
@@ -78,18 +75,15 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       int edit, newId;
       string newName;
       displayEditMenu();
-      input(edit,"Enter your chooise: ");
-      cin >> edit;
+      input(edit, "Enter your chooise: ");
       if (edit == 1) {
-        cout << "Enter update Name: ";
-        cin >> newName;
+        input(newName, "Enter update Name: ");
         update(user, userCount, newName);
       } else if (edit == 2) {
-        cout << "Enter update ID: ";
-        cin >> newId;
+        input(newId, "Enter update ID: ");
         update(user, userCount, newId);
       } else {
-        cout << "Invalid Input" << endl;
+        cout <<RED<< "Invalid Input" <<RESET<< endl;
       }
       break;
     }
@@ -102,10 +96,9 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       string keyName;
       int choice;
       displaySearchMenu();
-      input(choice,"Enter your chooise: ");
+      input(choice, "Enter your chooise: ");
       if (choice == 1) {
-        cout << " Enter ID: ";
-        cin >> keyId;
+        input(keyId, "Enter ID: ");
         if (linearSearch(user, userCount, keyId) != -1) {
           displayEachUser(user, linearSearch(user, userCount, keyId));
         } else {
@@ -114,8 +107,7 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
 
         break;
       } else if (choice == 2) {
-        cout << " Enter Name: ";
-        cin >> keyName;
+        input(keyName, " Enter Name: ");
         if (linearSearch(user, userCount, keyId) != -1) {
           displayEachUser(user, linearSearch(user, userCount, keyName));
         } else {
@@ -130,7 +122,7 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
     case SHORT: {
       int keyShort;
       displayShortMenu();
-      input(keyShort,"Enter your chooise: ");
+      input(keyShort, "Enter your chooise: ");
       shortFunction(user, userCount, keyShort);
       cout << GREEN << "Short User Successful!!" << RESET << endl;
       break;
@@ -159,7 +151,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       int controlWord;
       do {
         displayMenuControl("WORD");
-        input(controlWord,"Enter your chooise: ");
+        input(controlWord, "Enter your chooise: ");
         controlMenuWord(controlWord, word, wordCount);
       } while (controlWord != 0);
       break;
@@ -168,7 +160,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       int controlAccount;
       do {
         displayMenuControl("ACCOUNT");
-        input(controlAccount,"Enter your chooise: ");
+        input(controlAccount, "Enter your chooise: ");
         controlMenuAccount(controlAccount, user, userCount, maxUser);
       } while (controlAccount != 0);
       break;
