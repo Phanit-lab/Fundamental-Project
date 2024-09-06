@@ -135,7 +135,7 @@ int linearSearch(User user[], int count, int key) {
   return -1;
 }
 // Updated Function (User by name and id)
-// Updated Word
+  // Updated Word
 void update(string array[], int count, string update) {
   string newWord;
   int index = linearSearch(array, count, update);
@@ -147,7 +147,7 @@ void update(string array[], int count, string update) {
     cout << RED << newWord << " not found\n" << RESET << endl;
   }
 }
-// Updated User By Name
+  //Updated User By Name
 void update(User user[], int count, string update) {
   string newName;
   int index = linearSearch(user, count, update);
@@ -159,7 +159,7 @@ void update(User user[], int count, string update) {
     cout << RED << newName << " not found\n" << RESET << endl;
   }
 }
-// Updated User By ID
+//Updated User By ID
 void update(User user[], int count, int update) {
   int newId;
   int index = linearSearch(user, count, update);
@@ -233,36 +233,16 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
 
 void deleteUser(User users[], int &count) {
   bool userDelete = false;
-  int choice;
   int id;
-  string name;
-  input(choice, "Enter choice: ");
-  if (choice == 1) {
-    input(id, "Enter the ID of the User to delete:");
-    for (int i = 0; i < count; i++) {
-      if (users[i].id == id) {
-        cout << GREEN << "User" << users[i].name << " is deleted successfully!\n" << RESET << endl;
-        users[i] = users[--count];
-        userDelete = true;
-      }
+  input(id, "Enter the ID of the User to delete:");
+  for (int i = 0; i < count; i++) {
+    if (users[i].id == id) {
+      cout << GREEN << "User" << users[i].name << " is deleted successfully!\n" << RESET << endl;
+      users[i] = users[--count];
+      userDelete = true;
     }
-    if (!userDelete) {
-      cout << RED << "User not found!\n" << RESET << endl;
-    }
-  } else if (choice == 2) {
-    if (choice == 1) {
-      input(name, "Enter the ID of the User to delete:");
-      for (int i = 0; i < count; i++) {
-        if (users[i].name == name) {
-          cout << GREEN << "User" << users[i].name << " is deleted successfully!\n"
-               << RESET << endl;
-          users[i] = users[--count];
-          userDelete = true;
-        }
-      }
-      if (!userDelete) {
-        cout << RED << "User not found!\n" << RESET << endl;
-      }
-    }
+  }
+  if (!userDelete) {
+    cout << RED << "User not found!\n" << RESET << endl;
   }
 }
