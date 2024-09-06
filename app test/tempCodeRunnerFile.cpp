@@ -1,1 +1,0 @@
-oginChoice != 0

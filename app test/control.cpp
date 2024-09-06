@@ -108,7 +108,7 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
         break;
       } else if (choice == 2) {
         input(keyName, " Enter Name: ");
-        if (linearSearch(user, userCount, keyId) != -1) {
+        if (linearSearch(user, userCount, keyName) != -1) {
           displayEachUser(user, linearSearch(user, userCount, keyName));
         } else {
           cout << RED << "User not found" << RESET << endl;
@@ -124,12 +124,10 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       displayShortMenu();
       input(keyShort, "Enter your chooise: ");
       shortFunction(user, userCount, keyShort);
-      cout << GREEN << "Short User Successful!!" << RESET << endl;
       break;
 
       case DISPLAY: {
         displayUser(user, userCount);
-        cout << GREEN << "DISPLAY... Successful!!" << RESET << endl;
         break;
       }
       case CONTROL_EXIT: {

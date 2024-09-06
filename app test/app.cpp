@@ -26,7 +26,7 @@ int main() {
         string username, password;
         int control;
         int choise;
-        displayLogin();
+        displayfram("LOGIN_MENU");
         input(username,"Enter username: ");
         input(password, "Enter password: ");
         if (login(user, username, password, userCount)) {
