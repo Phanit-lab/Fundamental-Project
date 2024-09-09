@@ -12,6 +12,14 @@ struct User {
   string password;
   int role;
 };
+namespace account {
+
+};
+
+namespace word {
+
+};  // namespace ww
+
 
 // Feature Function
 // Login Function
@@ -38,7 +46,6 @@ void input(T &inPut, const string &text) {
   cin.ignore(numeric_limits<streamsize>::max(),
              '\n');  // (For switching between different tpye of input int, string)
 }
-
 // Add Function (Register)
 void addword(string word[], int &currentcout) {
   int count;
@@ -51,15 +58,11 @@ void addword(string word[], int &currentcout) {
   }
   cout << GREEN << "ADD Successful!!" << RESET << endl;
 }
+
 void addUser(User user[], int &userCount, int maxUsers) {
   int count = 1;
   displayfram("REGISTER");
 
-  if (userCount + count > maxUsers) {
-    cout << RED << "Error: Adding " << count << " users would exceed the maximum capacity of "
-         << maxUsers << " users." << RESET << endl;
-    return;
-  }
   for (int i = 0; i < count; i++) {
     input(user[userCount].name, " Name: ");
     input(user[userCount].username, " Username: ");
@@ -135,7 +138,7 @@ int linearSearch(User user[], int count, int key) {
   return -1;
 }
 // Updated Function (User by name and id)
-  // Updated Word
+// Updated Word
 void update(string array[], int count, string update) {
   string newWord;
   int index = linearSearch(array, count, update);
@@ -147,7 +150,7 @@ void update(string array[], int count, string update) {
     cout << RED << newWord << " not found\n" << RESET << endl;
   }
 }
-  //Updated User By Name
+// Updated User By Name
 void update(User user[], int count, string update) {
   string newName;
   int index = linearSearch(user, count, update);
@@ -159,7 +162,7 @@ void update(User user[], int count, string update) {
     cout << RED << newName << " not found\n" << RESET << endl;
   }
 }
-//Updated User By ID
+// Updated User By ID
 void update(User user[], int count, int update) {
   int newId;
   int index = linearSearch(user, count, update);
@@ -234,6 +237,7 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
 void deleteUser(User users[], int &count) {
   bool userDelete = false;
   int id;
+  displayfram("DELETE");
   input(id, "Enter the ID of the User to delete:");
   for (int i = 0; i < count; i++) {
     if (users[i].id == id) {
