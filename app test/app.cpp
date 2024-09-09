@@ -1,9 +1,8 @@
-#include <iostream>
-
 #include "control.cpp"
-using namespace std;
 
-int main() {
+
+
+void runningApp() {
   int loginChoice;
   const int MAX_USERS = 100;
   const int MAX_WORDS = 100;
@@ -51,6 +50,4 @@ int main() {
         break;
     }
   } while (loginChoice != 0);
-
-  return 0;
 }

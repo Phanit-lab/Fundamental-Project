@@ -1,7 +1,6 @@
-#include <iostream>
-
 #include "features.cpp"
-using namespace std;
+using namespace account;
+using namespace word;
 
 enum Login_Menu { LOGIN_EXIT, REGISTER, LOGIN };
 enum Control_Menu {
@@ -33,6 +32,7 @@ void controlMenuWord(int control, string word[], int& wordCount)
     }
     case DELETE: {
       string deleteWord;
+      displayWord(word,wordCount);
       input(deleteWord, "Enter the word you want to delete: ");
       deleteFunction(word, wordCount, deleteWord);
       break;
@@ -75,6 +75,7 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       int edit, newId;
       string newName;
       displayEditMenu();
+      displayUser(user,userCount);
       input(edit, "Enter your chooise: ");
       if (edit == 1) {
         input(newName, "Enter update Name: ");
@@ -88,6 +89,7 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
       break;
     }
     case DELETE: {
+      displayUser(user, userCount);
       deleteUser(user, userCount);
       break;
     }
@@ -121,9 +123,12 @@ void controlMenuAccount(int control, User user[], int& userCount, int maxUser) {
     }
     case SHORT: {
       int keyShort;
-      displayShortMenu();
+      int choice;
+      displayShort();
+      input(choice,"Enter Choice: ");
+      displayShortMenu(choice);
       input(keyShort, "Enter your chooise: ");
-      shortFunction(user, userCount, keyShort);
+      shortFunction(user, userCount, keyShort, choice);
       break;
 
       case DISPLAY: {

@@ -9,10 +9,12 @@ const string BLUE = "\033[34m";
 const string BRIGHT_BLUE = "\033[94m";
 
 void displayfram(string text) {
-  cout <<BRIGHT_BLUE<< "\n================ " << text << " ================\n" <<RESET<< endl;
+  cout << BRIGHT_BLUE << "\n================ " << text << " ================\n" << RESET << endl;
 }
 void displayMenuLogin() {
-  cout<<BRIGHT_BLUE<<"\n============================== THE GUESSING WORDS ==============================\n"<<RESET<<endl;
+  cout << BRIGHT_BLUE
+       << "\n============================== THE GUESSING WORDS ==============================\n"
+       << RESET << endl;
   cout << "1. Register" << endl;
   cout << "2. Login" << endl;
   cout << "0. Exit the program" << endl;
@@ -27,8 +29,8 @@ void displayMenuAdmin() {
   cout << BRIGHT_BLUE << "------------------------\n" << RESET << endl;
 }
 void displayMenuControl(string control) {
-
-  cout <<BRIGHT_BLUE<< "\n================= " << control << " _CONTROL=================\n" <<RESET<< endl;
+  cout << BRIGHT_BLUE << "\n================= " << control << " _CONTROL=================\n"
+       << RESET << endl;
   cout << "1. Add " << control << endl;
   cout << "2. Edit " << control << endl;
   cout << "3. Delete " << control << endl;
@@ -50,12 +52,28 @@ void displayEditMenu() {
   cout << " 1. Name" << endl;
   cout << " 2. ID\n" << endl;
 }
-void displayShortMenu() {
-displayfram("SHORT");
-  cout << "What do you want to short?" << endl;
-  cout << "1. Name" << endl;
-  cout << "2. ID\n" << endl;
+void displayShort(){
+  displayfram("SHORT");
+  cout<<"Do you want to short?"<<endl;
+  cout<<"1. Increase"<<endl;
+  cout<<"2. Discerease"<<endl;
 }
+void displayShortMenu(int choice) {
+  if (choice == 1) {
+    cout<<"SHORT_INCREASE"<<endl;;
+    cout << "What do you want to short?" << endl;
+    cout << "1. Name" << endl;
+    cout << "2. ID\n" << endl;
+  } else if (choice == 2) {
+    cout<<"SHORT_DISCREASE"<<endl;
+    cout << "What do you want to short?" << endl;
+    cout << "1. Name" << endl;
+    cout << "2. ID\n" << endl;
+  }else{
+    cout<<RED<<"Invalid Choice"<<RESET<<endl;;
+  }
+}
+
 void displayRole() {
   cout << " Role: " << endl;
   cout << " 1. Admin" << endl;
