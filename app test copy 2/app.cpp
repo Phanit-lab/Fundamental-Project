@@ -8,45 +8,43 @@ void runningApp() {
   string word[MAX_WORDS];
   int userCount;
   int wordCount = 0;
+  string fileName = "user.bat";
 
   do {
     displayMenuLogin();
     input(loginChoice, "Enter your chooise: ");
     switch (loginChoice) {
       case REGISTER:
-        addUser(user, userCount, MAX_USERS);
-        break;
-      case 6:
-        displayUser(user, userCount, MAX_USERS);
+        addUser(user, userCount, MAX_USERS,fileName);
         break;
       case LOGIN: {
         string username, password;
         int control;
         int choise;
-        // displayFram("LOGIN_MENU");
-        // readUsersFromFile(user,userCount,"user.txt",MAX_USERS);
-        // input(username,"Enter username: ");
-        // input(password, "Enter password: ");
-        // if (login(user, username, password, userCount)) {
-        //   cout << GREEN << "Login Successful!!" << RESET << endl;
+        displayFram("LOGIN_MENU");
+        readUsersFromFile(user,userCount,fileName,MAX_USERS);
+        input(username,"Enter username: ");
+        input(password, "Enter password: ");
+        if (login(user, username, password, userCount)) {
+          messageSuccessLogin();
         do {
           displayMenuAdmin();
           input(choise, "Enter your chooise: ");
-          adminMenu(choise, word, wordCount, user, userCount, MAX_USERS);
+          adminMenu(choise, word, wordCount, user, userCount, MAX_USERS,fileName);
         } while (choise != 0);
         break;
-        // } else {
-        //   cout << RED << "Incorect username or password" << RESET << endl;
-        // break;
-        // }
+        } else {
+          messageFailLogin();
+        break;
+        }
       }
       case LOGIN_EXIT: {
-        cout << RED << "The Program is Exited" << RESET << endl;
+        messageExitProgram();
         exit(0);
         break;
       }
       default: {
-        cout << RED << "Invalid choice!" << RESET << endl;
+        messageFailInvalid();
         break;
       }
     }

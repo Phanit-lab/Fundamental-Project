@@ -8,6 +8,8 @@ const string YELLOW = "\033[33m";
 const string BLUE = "\033[34m";
 const string BRIGHT_BLUE = "\033[94m";
 
+/*================ Menu Display =================*/
+namespace displayMenu {
 void displayFram(string text) {
   cout << BRIGHT_BLUE << "\n================ " << text << " ================" << RESET << endl;
 }
@@ -46,31 +48,38 @@ void displaySearchMenu() {
   cout << "1. By ID" << endl;
   cout << "2. By Name\n" << endl;
 }
+void displaySearchToEdit() { cout << "What ID you whant to Edit?" << endl; }
 void displayEditMenu() {
   displayFram("EDIT");
   cout << "What do you want to eddit? " << endl;
   cout << " 1. Name" << endl;
-  cout << " 2. ID\n" << endl;
+  cout << " 2. ID" << endl;
+  cout << " 3. Role\n" << endl;
 }
-void displayShort(){
+void displayShort() {
   displayFram("SHORT");
-  cout<<"Do you want to short?"<<endl;
-  cout<<"1. Increase"<<endl;
-  cout<<"2. Discerease"<<endl;
+  cout << "Do you want to short?" << endl;
+  cout << "1. Increase" << endl;
+  cout << "2. Discerease" << endl;
 }
 void displayShortMenu(int choice) {
   if (choice == 1) {
-    cout<<"SHORT_INCREASE"<<endl;;
+    cout <<BRIGHT_BLUE<< "=== SHORT_INCREASE ===" <<RESET<< endl;
     cout << "What do you want to short?" << endl;
     cout << "1. Name" << endl;
-    cout << "2. ID\n" << endl;
+    cout << "2. ID" << endl;
+    cout << "3. Role" << endl;
+    cout << "4. Username\n" << endl;
   } else if (choice == 2) {
-    cout<<"SHORT_DISCREASE"<<endl;
+    cout <<BRIGHT_BLUE<< "=== SHORT_DISCREASE ===" <<RESET<< endl;
     cout << "What do you want to short?" << endl;
     cout << "1. Name" << endl;
-    cout << "2. ID\n" << endl;
-  }else{
-    cout<<RED<<"Invalid Choice"<<RESET<<endl;;
+    cout << "2. ID" << endl;
+    cout << "3. Role" << endl;
+    cout << "4. Username\n" << endl;
+  } else {
+    cout << RED << "Invalid Choice" << RESET << endl;
+    ;
   }
 }
 
@@ -79,3 +88,118 @@ void displayRole() {
   cout << " 1. Admin" << endl;
   cout << " 2. Player\n" << endl;
 }
+
+};  // namespace displayMenu
+
+/*================ Message Display =================*/
+namespace message {
+/*------------Fail_Message-------------*/
+void messageFail(const string& newWord) { 
+  cout << RED << newWord << " not found\n" << RESET << endl; 
+}
+
+void messageFailInvalid() { 
+  cout << RED << "Invalid Choice" << RESET << endl; 
+}
+
+void messageFailWriteToFile() {
+  cout << RED << "Unable to open file for writing." << RESET << endl;
+}
+
+void messageFailOpenFile() { 
+  cout << RED << "Error: Could not open the file." << RESET << endl; 
+}
+
+void messageFailFoundUser() { 
+  cout << RED << "User Not Found!!" << RESET << endl; 
+}
+
+void messageFailDeleteWord(const string& word) {
+  cout << RED << word << " is not deleted " << RESET << endl;
+}
+
+void messageFailFoundWord() { 
+  cout << RED << "Word not found\n" << RESET << endl; 
+}
+
+void messageFailNoUser() { 
+  cout << RED << "No users available to display." << RESET << endl; 
+}
+
+void messageFailOpenFileOrigin() {
+  cout << RED << "Error: Could not open the original file." << RESET << endl;
+}
+
+void messageFailOpenFileTemporary() {
+  cout << RED << "Error: Could not open the temporary file for writing." << RESET << endl;
+}
+
+void messageFailLogin() { 
+  cout << RED << "Incorrect username or password" << RESET << endl; 
+}
+
+//--Message_Error---//
+void messageErrorDeletingFile() {
+  cout << RED << "Error deleting the original file." << RESET << endl;
+}
+
+void messageErrorRenameFile() {
+  cout << RED << "Error renaming the temporary file." << RESET << endl;
+}
+
+/*------------Success_Message-------------*/
+template <typename T>
+void messageSuccess(const T& value) {
+  cout << GREEN << value << " Successfully!!" << RESET << endl;
+}
+
+void messageSuccessDeleteWord(const string& word) {
+  cout << GREEN << word << " already deleted!!\n" << RESET << endl;
+}
+
+void messageSuccessRegister() { 
+  cout << GREEN << "Register Successful!!" << RESET << endl; 
+}
+
+void messageSuccessDisplay() { 
+  cout << GREEN << "Display Successful!!" << endl; 
+}
+
+void messageSuccessUpdateFile(int count) {
+  cout << GREEN << "File updated successfully with " << count << " records." << RESET << endl;
+}
+
+void messageSuccessUpdate(int value) { 
+  cout << GREEN << value << " successfully updated\n" << RESET << endl; 
+}
+
+void messageSuccessUpdate(const string& text) {
+  cout << GREEN << text << " successfully updated\n" << RESET << endl;
+}
+
+void messageSuccessSorted() { 
+  cout << GREEN << "Already sorted Successfully!!\n" << RESET << endl; 
+}
+
+void messageSuccessDelete(const string& name) {
+  cout << GREEN << "User " << name << " is deleted successfully!\n" << RESET << endl;
+}
+
+void messageSuccessSearchWord(const string& word) {
+  cout << GREEN << word << " found in the list" << RESET << endl;
+}
+
+void messageSuccessLogin() { 
+  cout << GREEN << "Login Successful!!" << RESET << endl; 
+}
+
+/*------------Back_And_Exit_Message-------------*/
+void messageBack(const string& text) {
+  cout << YELLOW << "Back to the " << text << " ..." << RESET << endl;
+}
+
+void messageExitProgram() { 
+  cout << RED << "The Program has exited." << RESET << endl; 
+}
+
+};  // namespace message

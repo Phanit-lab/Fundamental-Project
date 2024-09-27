@@ -1,5 +1,0 @@
-103,Hana TY,lana,110,1
-104,Yana LAK,kana,110,2
-106,Pana KEO,hana,110,2
-108,Uana LIM,yana,110,2
-109,Lika PLUS,lika,112,2

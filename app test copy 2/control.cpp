@@ -41,9 +41,9 @@ void controlMenuWord(int control, string word[], int& wordCount)
       string keyWord;
       input(keyWord, "What word you want to search: ");
       if (linearSearch(word, wordCount, keyWord) != -1) {
-        cout << GREEN << keyWord << " have in list" << RESET << endl;
+        messageSuccessSearchWord(keyWord);
       } else {
-        cout << RED << keyWord << " not found" << RESET << endl;
+        messageFailFoundWord();
       }
       break;
     }
@@ -56,39 +56,36 @@ void controlMenuWord(int control, string word[], int& wordCount)
       break;
     }
     case CONTROL_EXIT: {
-      cout << YELLOW << "Back to the USER Menu..." << RESET << endl;
+      messageBack("User Menu");
       break;
     }
     default: {
-      cout << RED << "Invalid choise" << RESET << endl;
+      messageFailInvalid();
       break;
     }
   }
 }
-void controlMenuAccount(int control, User user[], int& userCount, const int MAX_USERS) {
+void controlMenuAccount(int control, User user[], int& userCount, const int MAX_USERS,string fileName) {
   switch (control) {
     case ADD: {
-      addUser(user, userCount, MAX_USERS);
+      addUser(user, userCount, MAX_USERS,fileName);
       break;
     }
     case EDIT: {
-      int choice, newId;
-      string newName;
-      displayEditMenu();
-      input(choice, "Enter your chooise: ");
-      displayUser(user, userCount, MAX_USERS);
-      update(user, userCount, choice, MAX_USERS);
+      displayUser(user, userCount);
+      update(user, userCount, fileName);
       break;
     }
     case DELETE: {
-      displayUser(user, userCount, MAX_USERS);
-      deleteUser(user, userCount, MAX_USERS);
+      displayUser(user, userCount);
+      deleteUser(user, userCount, fileName);
       break;
     }
     case SEARCH: {
       int choice;
-      readUsersFromFile(user,userCount,"user.txt",MAX_USERS);
-      searchUser(user,userCount,MAX_USERS);
+      readUsersFromFile(user, userCount, fileName, MAX_USERS);
+      displaySearchMenu();
+      searchUser(user, userCount, MAX_USERS);
       break;
     }
     case SHORT: {
@@ -98,28 +95,28 @@ void controlMenuAccount(int control, User user[], int& userCount, const int MAX_
       input(choice, "Enter Choice: ");
       displayShortMenu(choice);
       input(keyShort, "Enter your chooise: ");
-      shortFunction(user, userCount, keyShort, choice, MAX_USERS);
+      sortUser(user, userCount, keyShort, choice, MAX_USERS);
       break;
 
       case DISPLAY: {
-        displayUser(user, userCount, MAX_USERS);
+        displayUser(user, userCount);
         cout << GREEN << "Display Successful!!" << endl;
         break;
       }
       case CONTROL_EXIT: {
-        cout << YELLOW << "Back to the USER Menu..." << RESET << endl;
+        messageBack("User Menu");
         break;
       }
 
       default: {
-        cout << RED << "Invalid choise" << RESET << endl;
+        messageFailInvalid();
         break;
       }
     }
   }
 }
 void adminMenu(int choise, string word[], int& wordCount, User user[], int& userCount,
-               int maxUser) {
+               int maxUser,string fileName) {
   switch (choise) {
     case WORD: {
       int controlWord;
@@ -135,7 +132,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       do {
         displayMenuControl("ACCOUNT");
         input(controlAccount, "Enter your chooise: ");
-        controlMenuAccount(controlAccount, user, userCount, maxUser);
+        controlMenuAccount(controlAccount, user, userCount, maxUser,fileName);
       } while (controlAccount != 0);
       break;
     }
@@ -144,7 +141,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       break;
     }
     case ADMIN_EXIT: {
-      cout << YELLOW << "Back to the Login Menu..." << RESET << endl;
+      messageBack("Login Menu");
       break;
     }
     default: {

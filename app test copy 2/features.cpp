@@ -5,8 +5,10 @@
 #include <string>
 
 #include "displays.cpp"
+using namespace message;
+using namespace displayMenu;
 
-// Structure
+//====== Structure ========
 struct User {
   int id;
   string name;
@@ -14,6 +16,12 @@ struct User {
   string password;
   int role;
 };
+//========ENUM=======
+enum Sort { EXIT_SORT, SORT_INCREASE, SORT_DECREASE };
+enum SortBy { EXIT_SORT, SORT_NAME, SORT_ID, SORT_ROLE, SORT_USERNAME };
+enum Update { EXIT_UPDATE, UPDATE_NAME, UPDATE_ID, UPDATE_ROLE };
+enum SearchUser { EXIT_SEARCH, SEARCH_ID, SEARCH_NAME };
+
 // Feature Function
 // Login Function
 bool login(User user[], string keyName, string keyPassword, int count) {
@@ -40,7 +48,7 @@ void input(T &inPut, const string &text) {
              '\n');  // (For switching between different tpye of input int, string)
 }
 void inputName(string &value, string text) {
-  cout << text;
+  cout << "--> " << text;
   getline(cin, value);
 }
 
@@ -55,18 +63,16 @@ void writeUserToFile(const User &user, const string &filename) {
          << user.role << endl;
     file.close();
   } else {
-    cerr << "Unable to open file for writing." << endl;
+    messageFailWriteToFile();
   }
 }
 // Read data from the file
 void readUsersFromFile(User user[], int &count, const string &fileName, const int MAX_USER) {
   ifstream file(fileName);
-
   if (!file.is_open()) {
-    cerr << "Error: Could not open the file." << endl;
+    messageFailOpenFile();
     return;
   }
-
   string line;
   count = 0;                                         // Reset the count before reading data
   while (getline(file, line) && count < MAX_USER) {  // Adjust 100 based on max array size
@@ -82,12 +88,11 @@ void readUsersFromFile(User user[], int &count, const string &fileName, const in
     read >> user[count].role;
     count++;  // Increment the count for each user read
   }
-
   file.close();
 }
 
 // Add user or Registeration
-void addUser(User user[], int &userCount, int maxUsers) {
+void addUser(User user[], int &userCount, int maxUsers, const string &fileName) {
   displayFram("REGISTER");
   inputName(user[userCount].name, " Name: ");
   input(user[userCount].username, " Username: ");
@@ -103,15 +108,14 @@ void addUser(User user[], int &userCount, int maxUsers) {
   } while (user[userCount].role != 1 && user[userCount].role != 2);
 
   cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
-  cout << GREEN << "Register Successful!!" << RESET << endl;
-  writeUserToFile(user[userCount], "user.txt");
+  messageSuccessRegister();
+  writeUserToFile(user[userCount], fileName);
   userCount++;
 }
 
-void displayUser(User user[], int count, const int MAX_USERS) {
-  readUsersFromFile(user, count, "user.txt", MAX_USERS);
+void displayUser(User user[], int count) {
   if (count == 0) {
-    cout << RED << "No users available to display." << RESET << endl;
+    messageFailNoUser();
     return;
   }
   displayFram("DISPLAY_ALL_USER");
@@ -121,11 +125,8 @@ void displayUser(User user[], int count, const int MAX_USERS) {
 
   // Display user data
   for (int i = 0; i < count; i++) {
-    // Set left alignment and display user details with proper column width
     cout << setw(7) << left << user[i].id << setw(15) << left << user[i].name << setw(20) << left
          << user[i].username << setw(10) << left;
-
-    // Display role with switch case
     switch (user[i].role) {
       case 1:
         cout << "Admin" << endl;
@@ -142,13 +143,8 @@ void displayUser(User user[], int count, const int MAX_USERS) {
 }
 
 void displayEachUser(User user[], int index) {
-  if (index<=0)
-  {
-   cout<<RED<<"User Not Found!!"<<RESET<<endl;
-  }
-  
-  if (index <= 0) {
-    cout << "User Not Foun!!" << endl;
+  if (index < 0) {
+    messageFailNoUser();
     return;
   }
 
@@ -171,7 +167,6 @@ void displayEachUser(User user[], int index) {
 }
 
 // Search Function (search for user by id and name)
-
 int linearSearch(User user[], int count, string key) {
   for (int i = 0; i < count; i++) {
     if (user[i].name == key) {
@@ -188,51 +183,70 @@ int linearSearch(User user[], int count, int key) {
   }
   return -1;
 }
+int searchUserByID(User user[], int userCount) {
+  int keyId;
+  int index;
+  input(keyId, "Enter ID: ");
+  if ((index = linearSearch(user, userCount, keyId)) != -1) {
+    displayEachUser(user, index);
+    return index;
+  } else {
+    messageFailFoundUser();
+  }
+}
+int searchUserByName(User user[], int userCount) {
+  string keyName;
+  int index;
+  inputName(keyName, " Enter Name: ");
+  if ((index = linearSearch(user, userCount, keyName)) != -1) {
+    displayEachUser(user, index);
+    return index;
+    messageSuccessDisplay();
+  } else {
+    messageFailFoundUser();
+  }
+}
 void searchUser(User user[], int userCount, const int MAX_USERS) {
   int choice;  // Search by Name and ID;
   int index;
   int keyId;
   string keyName;
-  readUsersFromFile(user, userCount, "user.txt", MAX_USERS);
-  displaySearchMenu();
   input(choice, "Enter your chooise: ");
-  if (choice == 1) {
-    input(keyId, "Enter ID: ");
-    if ((index = linearSearch(user, userCount, keyId)) != -1) {
-      displayEachUser(user, index);
-      cout << GREEN << "Display Successful!!" << endl;
-    } else {
-      cout << RED << "User not found" << RESET << endl;
-    }
-  } else if (choice == 2) {
-    input(keyName, " Enter Name: ");
-    if ((index = linearSearch(user, userCount, keyName)) != -1) {
-      displayEachUser(user, index);
-      cout << GREEN << "Display Successful!!" << endl;
-    } else {
-      cout << RED << "User not found" << RESET << endl;
-    }
-  } else {
-    cout << RED << "Invalid Choise" << RESET << endl;
+
+  switch (choice) {
+    case SEARCH_ID:
+      searchUserByID(user, userCount);
+      break;
+    case SEARCH_NAME:
+      searchUserByName(user, userCount);
+      break;
+    case EXIT_SEARCH:
+      break;
+
+    default:
+      messageFailInvalid();
+      break;
   }
 }
 // Updated Function (User by name and id)
-void updateFile(User user[], int count) {
-  ifstream originalFile("user.txt");  // Open the original file
-  ofstream tempFile("temp.txt");      // Open the temp file for writing
+void updateFile(User user[], int count, const string &fileName) {
+  ifstream originalFile(fileName);  // Open the original file
+  ofstream tempFile("temp.txt");    // Open the temp file for writing
 
   if (!originalFile.is_open()) {
-    cerr << RED << "Error: Could not open the original file." << RESET << endl;
+    messageFailOpenFileOrigin();
     return;
   }
 
   if (!tempFile.is_open()) {
-    cerr << RED << "Error: Could not open the temporary file for writing." << RESET << endl;
+    messageFailOpenFileTemporary();
     return;
   }
 
   string line;
   int index = 0;  // Keep track of the index to match user data
+
+  // Loop through the original file and write updated data to temp file
   while (getline(originalFile, line) && index < count) {
     stringstream read(line);
     int currentId;
@@ -248,11 +262,11 @@ void updateFile(User user[], int count) {
     read >> currentRole;
 
     // Now write the updated or unchanged data to the temp file
-    tempFile << user[index].id << ","    // Updated ID
-             << user[index].name << ","  // Updated Name
-             << currentUsername << ","   // Keep username unchanged
-             << currentPassword << ","   // Keep password unchanged
-             << currentRole << endl;     // Keep role unchanged
+    tempFile << user[index].id << ","        // Updated ID
+             << user[index].name << ","      // Updated Name
+             << user[index].username << ","  // Updated Username
+             << currentPassword << ","       // Keep password unchanged
+             << user[index].role << endl;    // Updated Role
 
     index++;
   }
@@ -262,52 +276,62 @@ void updateFile(User user[], int count) {
   tempFile.close();
 
   // Replace the original file with the updated temporary file
-  if (remove("user.txt") != 0) {
-    cerr << RED << "Error deleting the original file." << RESET << endl;
-  } else if (rename("temp.txt", "user.txt") != 0) {
-    cerr << RED << "Error renaming the temporary file." << RESET << endl;
+  if (remove(fileName.c_str()) != 0) {
+    messageErrorDeletingFile();
+  } else if (rename("temp.txt", fileName.c_str()) != 0) {
+    messageErrorRenameFile();
   } else {
-    cout << GREEN << "File updated successfully with " << count << " records." << RESET << endl;
+    messageSuccessUpdateFile(count);
   }
 }
-//
 
-//
-void update(User user[], int count, int choice, const int MAX_USERS) {
-  readUsersFromFile(user, count, "user.txt", MAX_USERS);
-  string name, newName;
-  int id, newId;
-  int index;
+// Update User
+void update(User user[], int count, string fileName) {
+  string newName;
+  int newId, newRole;
+  int index, choice;
 
+  displaySearchToEdit();
+  index = searchUserByID(user, count);
+
+  displayEditMenu();
+  input(choice, "Enter choice: ");
   switch (choice) {
-    case 1:
-      input(name, "Enter name: ");
-      index = linearSearch(user, count, name);
+    case UPDATE_NAME:
       if (index != -1) {
-        input(newName, "Enter new name: ");
+        inputName(newName, "Enter new name: ");
         user[index].name = newName;
-        cout << GREEN << newName << " successfull updated\n" << endl;
+        messageSuccessUpdate(newName);
       } else {
-        cout << RED << newName << " not found\n" << RESET << endl;
+        messageFailFoundUser();
       }
       break;
-    case 2:
-      input(id, "Enter ID: ");
-      index = linearSearch(user, count, id);
+    case UPDATE_ID:
       if (index != -1) {
         input(newId, "Enter new ID: ");
         user[index].id = newId;
-        cout << GREEN << newId << " Successfull Updated\n" << endl;
+        messageSuccessUpdate(user[index].name);
       } else {
-        cout << RED << newId << " not found\n" << RESET << endl;
+        messageFailFoundUser();
       }
+      break;
+    case UPDATE_ROLE:
+      if (index != -1) {
+        input(newRole, "Enter new ID: ");
+        user[index].role = newRole;
+        messageSuccessUpdate(user[index].name);
+      } else {
+        messageFailFoundUser();
+      }
+      break;
+    case EXIT_UPDATE:
       break;
 
     default:
-      cout << RED << "Invalid choice" << RESET << endl;
+      messageFailInvalid();
       break;
-  }
-  updateFile(user, count);
+  };
+  updateFile(user, count, fileName);
 }
 
 // Swapping and Short Function
@@ -317,65 +341,65 @@ void swappingUser(User &a, User &b) {
   b = t;
 }
 
-void shortFunction(User user[], int count, int key, int shortBy, const int MAX_USERS) {
-  readUsersFromFile(user, count, "user.txt", MAX_USERS);
-  switch (shortBy) {
-    case 1:
-      if (key == 1) {  // Sort by name
-        for (int i = 0; i < count - 1; i++) {
-          for (int j = 0; j < count - i - 1; j++) {
-            if (user[j].name > user[j + 1].name) {
-              swappingUser(user[j], user[j + 1]);
-            }
+void sortUser(User user[], int count, int key, int sortBy, const int MAX_USERS) {
+  bool ascending = (sortBy == SORT_INCREASE);  // Flag for sorting order
+
+  switch (key) {
+    case SORT_NAME:  // Sort by name
+      for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+          if ((ascending && user[j].name > user[j + 1].name) ||
+              (!ascending && user[j].name < user[j + 1].name)) {
+            swappingUser(user[j], user[j + 1]);
           }
         }
-        cout << GREEN << "Already shorted by name increase Successful!!\n" << RESET << endl;
-      } else if (key == 2) {  // Sort by id
-        for (int i = 0; i < count - 1; i++) {
-          for (int j = 0; j < count - i - 1; j++) {
-            if (user[j].id > user[j + 1].id) {
-              swappingUser(user[j], user[j + 1]);
-            }
-          }
-        }
-        cout << GREEN << "Already shorted by id increase Successful!!\n" << RESET << endl;
-      } else {
-        cout << RED << "Invalid Choice\n" << RESET << endl;
       }
       break;
-    case 2:
-      if (key == 1) {  // Sort by name
-        for (int i = 0; i < count - 1; i++) {
-          for (int j = 0; j < count - i - 1; j++) {
-            if (user[j].name < user[j + 1].name) {
-              swappingUser(user[j], user[j + 1]);
-            }
+
+    case SORT_ID:  // Sort by id
+      for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+          if ((ascending && user[j].id > user[j + 1].id) ||
+              (!ascending && user[j].id < user[j + 1].id)) {
+            swappingUser(user[j], user[j + 1]);
           }
         }
-        cout << GREEN << "Already shorted by name discrease Successful!!\n" << RESET << endl;
-      } else if (key == 2) {  // Sort by id
-        for (int i = 0; i < count - 1; i++) {
-          for (int j = 0; j < count - i - 1; j++) {
-            if (user[j].id < user[j + 1].id) {
-              swappingUser(user[j], user[j + 1]);
-            }
+      }
+      break;
+
+    case SORT_ROLE:  // Sort by role
+      for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+          if ((ascending && user[j].role > user[j + 1].role) ||
+              (!ascending && user[j].role < user[j + 1].role)) {
+            swappingUser(user[j], user[j + 1]);
           }
         }
-        cout << GREEN << "Already shorted by id discrease Successful!!\n" << RESET << endl;
-      } else {
-        cout << RED << "Invalid Choice\n" << RESET << endl;
+      }
+      break;
+
+    case SORT_USERNAME:  // Sort by username
+      for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+          if ((ascending && user[j].username > user[j + 1].username) ||
+              (!ascending && user[j].username < user[j + 1].username)) {
+            swappingUser(user[j], user[j + 1]);
+          }
+        }
       }
       break;
 
     default:
-      cout << "Invalid Choice" << endl;
-      break;
+      messageFailInvalid();  // Invalid sort key
+      return;
   }
-  updateFile(user, count);
+
+  displayUser(user, count);  // Assuming displayUser only needs count
+  messageSuccessSorted();
 }
+
 // Deleted Function (User by id)
-void deleteUser(User users[], int &count, const int MAX_USERS) {
-  readUsersFromFile(users, count, "user.txt", MAX_USERS);
+void deleteUser(User users[], int &count, string fileName) {
   bool userDelete = false;
   int id;
   char verify;
@@ -385,20 +409,20 @@ void deleteUser(User users[], int &count, const int MAX_USERS) {
     if (users[i].id == id) {
       input(verify, "Are you sure you want to delete? (y/n): ");
       if (verify == 'y' || verify == 'Y') {
-        cout << GREEN << "User " << users[i].name << " is deleted successfully!\n" << RESET << endl;
+        messageSuccessDelete(users[i].name);
         users[i] = users[--count];
         userDelete = true;
       } else if (verify == 'n' || verify == 'N') {
         exit(0);
       } else {
-        cout << "Invalid Input" << endl;
+        messageFailInvalid();
       }
     }
   }
   if (!userDelete) {
-    cout << RED << "User not found!\n" << RESET << endl;
+    messageFailFoundUser();
   }
-  updateFile(users, count);
+  updateFile(users, count, fileName);
 }
 };  // namespace account
 
@@ -414,7 +438,7 @@ void addword(string word[], int &currentcout) {
     cin >> word[currentcout];
     currentcout++;
   }
-  cout << GREEN << "ADD Successful!!" << RESET << endl;
+  messageSuccess("ADD");
 }
 // Display Function
 void displayWord(string word[], int &currentcout) {
@@ -422,7 +446,7 @@ void displayWord(string word[], int &currentcout) {
   for (int i = 0; i < currentcout; i++) {
     cout << i + 1 << ". " << word[i] << endl;
   }
-  cout << GREEN << "Display Successful!!" << RESET << endl;
+  messageSuccess("Display");
 }
 // Search Function
 int linearSearch(string array[], int count, string key) {
@@ -439,9 +463,9 @@ void update(string array[], int count, string update) {
   if (index != -1) {
     input(newWord, "Enter new Word: ");
     array[index] = newWord;
-    cout << GREEN << newWord << " successfull updated\n" << endl;
+    messageSuccess("Update");
   } else {
-    cout << RED << newWord << " not found\n" << RESET << endl;
+    messageFail(newWord);
   }
 }
 void swappingWord(string &a, string &b) {
@@ -458,7 +482,7 @@ void shortWord(string arr[], int count) {
       }
     }
   }
-  cout << GREEN << "Word already shorted Successful!!\n" << RESET << endl;
+  messageSuccess("Sort");
 }
 void deleteFunction(string arr[], int &count, string deleteKey) {
   int index = linearSearch(arr, count, deleteKey);
@@ -466,17 +490,17 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
   if (index != -1) {
     input(verify, "Are you sure you want to delete? (y/n): ");
     if (verify == 'Y' || verify == 'y') {
-      cout << GREEN << arr[index] << " already deleted!!\n" << RESET << endl;
+      messageSuccessDeleteWord(arr[index]);
       for (int i = index; i < count - 1; i++) {
         arr[i] = arr[i + 1];
       }
       count--;
     } else if (verify == 'N', verify == 'n') {
-      cout << RED << arr[index] << " is not deleted " << RESET << endl;
+      messageFailDeleteWord(arr[index]);
     }
 
   } else {
-    cout << RED << arr[index] << "  not found\n" << RESET << endl;
+    messageFailFoundWord();
   }
 }
 };  // namespace word
