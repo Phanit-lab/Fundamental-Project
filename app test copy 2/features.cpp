@@ -18,7 +18,7 @@ struct User {
 };
 //========ENUM=======
 enum Sort { EXIT_SORT, SORT_INCREASE, SORT_DECREASE };
-enum SortBy { EXIT_SORT, SORT_NAME, SORT_ID, SORT_ROLE, SORT_USERNAME };
+enum SortBy { EXIT_SORTS, SORT_NAME, SORT_ID, SORT_ROLE, SORT_USERNAME };
 enum Update { EXIT_UPDATE, UPDATE_NAME, UPDATE_ID, UPDATE_ROLE };
 enum SearchUser { EXIT_SEARCH, SEARCH_ID, SEARCH_NAME };
 
@@ -92,7 +92,7 @@ void readUsersFromFile(User user[], int &count, const string &fileName, const in
 }
 
 // Add user or Registeration
-void addUser(User user[], int &userCount, int maxUsers, const string &fileName) {
+void addUser(User user[], int &userCount, const string &fileName) {
   displayFram("REGISTER");
   inputName(user[userCount].name, " Name: ");
   input(user[userCount].username, " Username: ");
@@ -192,6 +192,7 @@ int searchUserByID(User user[], int userCount) {
     return index;
   } else {
     messageFailFoundUser();
+    return -1;
   }
 }
 int searchUserByName(User user[], int userCount) {
@@ -200,16 +201,15 @@ int searchUserByName(User user[], int userCount) {
   inputName(keyName, " Enter Name: ");
   if ((index = linearSearch(user, userCount, keyName)) != -1) {
     displayEachUser(user, index);
-    return index;
     messageSuccessDisplay();
+    return index;
   } else {
     messageFailFoundUser();
+    return -1;
   }
 }
-void searchUser(User user[], int userCount, const int MAX_USERS) {
+void searchUser(User user[], int userCount) {
   int choice;  // Search by Name and ID;
-  int index;
-  int keyId;
   string keyName;
   input(choice, "Enter your chooise: ");
 
@@ -341,7 +341,7 @@ void swappingUser(User &a, User &b) {
   b = t;
 }
 
-void sortUser(User user[], int count, int key, int sortBy, const int MAX_USERS) {
+void sortUser(User user[], int count, int key, int sortBy) {
   bool ascending = (sortBy == SORT_INCREASE);  // Flag for sorting order
 
   switch (key) {
@@ -388,7 +388,8 @@ void sortUser(User user[], int count, int key, int sortBy, const int MAX_USERS) 
         }
       }
       break;
-
+    case EXIT_SORTS:
+      break;
     default:
       messageFailInvalid();  // Invalid sort key
       return;
@@ -428,8 +429,27 @@ void deleteUser(User users[], int &count, string fileName) {
 
 // Use Namespace For Word Feature:
 namespace word {
+void addWordToFile(const string &filePath) {
+  ofstream file(filePath, ios::app);  // Open the file in append mode
+  if (!file) {
+    cerr << "Unable to open file for writing." << endl;
+    return;
+  }
+
+  string newWord;
+  cout << "Enter a new word to add: ";
+  cin >> newWord;
+
+  // Optional: Validate the word (can be extended)
+  for (char c : newWord) {
+    if (!isalpha(c)) {
+      cout << "Invalid word! Please enter letters only." << endl;
+      return;
+    }
+  }
+}
 // Add Function (Add Word)
-void addword(string word[], int &currentcout) {
+void addword(string word[], int &currentcout, string fileName) {
   int count;
   displayFram("ADD_WORDS");
   input(count, "How many words you want to add? : ");
@@ -438,6 +458,7 @@ void addword(string word[], int &currentcout) {
     cin >> word[currentcout];
     currentcout++;
   }
+  addWordToFile(fileName);
   messageSuccess("ADD");
 }
 // Display Function
@@ -495,12 +516,119 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
         arr[i] = arr[i + 1];
       }
       count--;
-    } else if (verify == 'N', verify == 'n') {
+    } else if (verify = 'N', verify = 'n') {
       messageFailDeleteWord(arr[index]);
     }
-
   } else {
     messageFailFoundWord();
   }
 }
 };  // namespace word
+
+/*======== Game Feature ========*/
+// Load words from a file
+int loadWords(const string &filePath, string words[], const int MAX_WORDS) {
+  ifstream file(filePath);
+  if (!file.is_open()) {
+    cerr << "Error: Unable to open file \"" << filePath << "\"." << endl;
+    return 0;
+  }
+
+  int wordCount = 0;
+  while (file >> words[wordCount] && wordCount < MAX_WORDS) {
+    wordCount++;
+  }
+  file.close();
+  return wordCount;
+}
+
+// Select a random word
+string selectRandomWord(string words[], int wordCount) {
+  srand(time(0));
+  return words[rand() % wordCount];
+}
+// Display the current progress
+void displayProgress(const string &secretWord, const string &guessedLetters) {
+  for (char letter : secretWord) {
+    bool found = false;
+
+    // Check if the letter is in guessedLetters
+    for (int i = 0; i < guessedLetters.length(); ++i) {
+      if (letter == guessedLetters[i]) {
+        found = true;  // Letter has been guessed
+        break;         // No need to check further
+      }
+    }
+
+    // Print the letter if guessed; otherwise print an underscore
+    if (found) {
+      cout << letter << ' ';
+    } else {
+      cout << "_ ";
+    }
+  }
+  cout << endl;  // Move to the next line after displaying the progress
+}
+void playGuessingGame(const int MAX_WORDS, const string fileWord) {
+  string words[MAX_WORDS];
+  string guessedLetters;
+  int wordCount = loadWords(fileWord, words, MAX_WORDS);
+
+  if (wordCount == 0) {
+    cerr << "Error: No words found in the file." << endl;
+    return;
+  }
+
+  string secretWord = selectRandomWord(words, wordCount);
+  int attempts = 6;
+
+  cout << "Welcome to the Guessing Word Game!" << endl;
+
+  while (attempts > 0) {
+    displayProgress(secretWord, guessedLetters);
+    cout << "Attempts left: " << attempts << endl;
+
+    string guess;
+    cout << "Guess a word: ";
+    cin >> guess;
+
+    // Validate the guess for alphabetic characters
+    bool isValid = true;
+    for (char c : guess) {
+      if (!isalpha(c)) {
+        isValid = false;
+        break;
+      }
+    }
+
+    if (!isValid) {
+      cerr << "Error: Invalid word! Please enter letters only." << endl;
+      continue;
+    }
+
+    // Add unguessed letters from the guess to guessedLetters
+    for (char letter : guess) {
+      bool alreadyGuessed = false;
+      for (int i = 0; i < guessedLetters.length(); ++i) {
+        if (guessedLetters[i] == letter) {
+          alreadyGuessed = true;
+          break;
+        }
+      }
+      if (!alreadyGuessed) {
+        guessedLetters += letter;  // Add only if it hasn't been guessed
+      }
+    }
+
+    // Check if the guess matches the secret word
+    if (guess == secretWord) {
+      cout << "\nCongratulations! You've guessed the word: " << secretWord << endl;
+      return;
+    } else {
+      cout << "Sorry, that word is not correct." << endl;
+      attempts--;
+    }
+  }
+
+  cout << "\nSorry, you've run out of attempts. The word was: " << secretWord << endl;
+}

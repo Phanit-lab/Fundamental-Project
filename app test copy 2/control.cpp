@@ -16,12 +16,12 @@ enum Control_Menu {
 enum Admin_Menu { ADMIN_EXIT, WORD, ACCOUNT, PLAY };
 // Control Function
 
-void controlMenuWord(int control, string word[], int& wordCount)
+void controlMenuWord(int control, string word[], int& wordCount,string fileName)
 
 {
   switch (control) {
     case ADD: {
-      addword(word, wordCount);
+      addword(word, wordCount,fileName);
       break;
     }
     case EDIT: {
@@ -68,7 +68,7 @@ void controlMenuWord(int control, string word[], int& wordCount)
 void controlMenuAccount(int control, User user[], int& userCount, const int MAX_USERS,string fileName) {
   switch (control) {
     case ADD: {
-      addUser(user, userCount, MAX_USERS,fileName);
+      addUser(user, userCount,fileName);
       break;
     }
     case EDIT: {
@@ -85,7 +85,7 @@ void controlMenuAccount(int control, User user[], int& userCount, const int MAX_
       int choice;
       readUsersFromFile(user, userCount, fileName, MAX_USERS);
       displaySearchMenu();
-      searchUser(user, userCount, MAX_USERS);
+      searchUser(user, userCount);
       break;
     }
     case SHORT: {
@@ -95,7 +95,7 @@ void controlMenuAccount(int control, User user[], int& userCount, const int MAX_
       input(choice, "Enter Choice: ");
       displayShortMenu(choice);
       input(keyShort, "Enter your chooise: ");
-      sortUser(user, userCount, keyShort, choice, MAX_USERS);
+      sortUser(user, userCount, keyShort, choice);
       break;
 
       case DISPLAY: {
@@ -116,14 +116,14 @@ void controlMenuAccount(int control, User user[], int& userCount, const int MAX_
   }
 }
 void adminMenu(int choise, string word[], int& wordCount, User user[], int& userCount,
-               int maxUser,string fileName) {
+               int maxUser,string fileNameUser,string fileWord, int MAX_WORDS) {
   switch (choise) {
     case WORD: {
       int controlWord;
       do {
         displayMenuControl("WORD");
         input(controlWord, "Enter your chooise: ");
-        controlMenuWord(controlWord, word, wordCount);
+        controlMenuWord(controlWord, word, wordCount,fileWord);
       } while (controlWord != 0);
       break;
     }
@@ -132,11 +132,12 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       do {
         displayMenuControl("ACCOUNT");
         input(controlAccount, "Enter your chooise: ");
-        controlMenuAccount(controlAccount, user, userCount, maxUser,fileName);
+        controlMenuAccount(controlAccount, user, userCount, maxUser,fileNameUser);
       } while (controlAccount != 0);
       break;
     }
     case PLAY: {
+      playGuessingGame(MAX_WORDS,fileWord);
       cout << RED << "GAME_WILL_RELEASE_SOON" << RESET << endl;
       break;
     }

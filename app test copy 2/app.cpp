@@ -8,21 +8,22 @@ void runningApp() {
   string word[MAX_WORDS];
   int userCount;
   int wordCount = 0;
-  string fileName = "user.bat";
+  string fileUser = "user.bat";
+  string fileWord = "words.txt";
 
   do {
     displayMenuLogin();
     input(loginChoice, "Enter your chooise: ");
     switch (loginChoice) {
       case REGISTER:
-        addUser(user, userCount, MAX_USERS,fileName);
+        addUser(user, userCount,fileUser);
         break;
       case LOGIN: {
         string username, password;
         int control;
         int choise;
         displayFram("LOGIN_MENU");
-        readUsersFromFile(user,userCount,fileName,MAX_USERS);
+        readUsersFromFile(user,userCount,fileUser,MAX_USERS);
         input(username,"Enter username: ");
         input(password, "Enter password: ");
         if (login(user, username, password, userCount)) {
@@ -30,7 +31,7 @@ void runningApp() {
         do {
           displayMenuAdmin();
           input(choise, "Enter your chooise: ");
-          adminMenu(choise, word, wordCount, user, userCount, MAX_USERS,fileName);
+          adminMenu(choise, word, wordCount, user, userCount, MAX_USERS,fileUser,fileWord,MAX_WORDS);
         } while (choise != 0);
         break;
         } else {
