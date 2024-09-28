@@ -16,12 +16,12 @@ enum Control_Menu {
 enum Admin_Menu { ADMIN_EXIT, WORD, ACCOUNT, PLAY };
 // Control Function
 
-void controlMenuWord(int control, string word[], int& wordCount,string fileName)
+void controlMenuWord(int control, string word[], int& wordCount,string fileName,const int MAX_WORDS)
 
 {
   switch (control) {
     case ADD: {
-      addword(word, wordCount,fileName);
+      addword(word, wordCount,fileName,MAX_WORDS);
       break;
     }
     case EDIT: {
@@ -120,10 +120,11 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
   switch (choise) {
     case WORD: {
       int controlWord;
+      loadWords(fileWord,word,MAX_WORDS);
       do {
         displayMenuControl("WORD");
         input(controlWord, "Enter your chooise: ");
-        controlMenuWord(controlWord, word, wordCount,fileWord);
+        controlMenuWord(controlWord, word, wordCount,fileWord,MAX_WORDS);
       } while (controlWord != 0);
       break;
     }
@@ -137,7 +138,7 @@ void adminMenu(int choise, string word[], int& wordCount, User user[], int& user
       break;
     }
     case PLAY: {
-      playGuessingGame(MAX_WORDS,fileWord);
+      playGuessingGame(word,MAX_WORDS,fileWord);
       cout << RED << "GAME_WILL_RELEASE_SOON" << RESET << endl;
       break;
     }

@@ -201,5 +201,29 @@ void messageBack(const string& text) {
 void messageExitProgram() { 
   cout << RED << "The Program has exited." << RESET << endl; 
 }
-
+/*------------GUESSING GAME------------*/
+void messageSuccessGuess(string word){
+  cout <<BRIGHT_BLUE<< "\nCongratulations! You've guessed the word: " <<RESET<<GREEN<< word <<RESET<< endl;
+}
+void messageFailGuess(){
+  cout <<RED<< "Sorry, that word is not correct." <<RESET<< endl;
+}
+void messageFailAttempts(string word){
+  cout <<RED<< "\nSorry, you've run out of attempts. The word was: " << word <<RESET<< endl;
+}
+void messageFailInvalidWord(){
+  cout <<RED<< "Error: Invalid word! Please enter letters only." <<RESET<< endl;
+}
+void messageAttemptsLeft(int attempts){
+  cout <<YELLOW<< "Attempts left: " << attempts <<RESET<< endl;
+}
+void messageWelconmeToGame(){
+  cout <<BRIGHT_BLUE<< "Welcome to the Guessing Word Game!" <<RESET<< endl;
+}
+void messageFailErrorFile(){
+  cout <<RED<< "Error: No words found in the file." <<RESET<< endl;
+}
+void messageFailValidationWord(const int MAX_WORDS){
+  cout << "Error: Cannot add more words. Maximum limit of " << MAX_WORDS << " reached!" << endl;
+}
 };  // namespace message

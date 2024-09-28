@@ -3,6 +3,7 @@
 #include <limits>
 #include <sstream>
 #include <string>
+#include <cctype> 
 
 #include "displays.cpp"
 using namespace message;
@@ -429,37 +430,54 @@ void deleteUser(User users[], int &count, string fileName) {
 
 // Use Namespace For Word Feature:
 namespace word {
-void addWordToFile(const string &filePath) {
+ // For isalpha
+
+// Function to write a word to a file
+void writeWordToFile(const string &filePath, const string words[], int& count) {
   ofstream file(filePath, ios::app);  // Open the file in append mode
   if (!file) {
-    cerr << "Unable to open file for writing." << endl;
+    messageFailOpenFile();
     return;
   }
 
-  string newWord;
-  cout << "Enter a new word to add: ";
-  cin >> newWord;
-
-  // Optional: Validate the word (can be extended)
-  for (char c : newWord) {
-    if (!isalpha(c)) {
-      cout << "Invalid word! Please enter letters only." << endl;
-      return;
-    }
-  }
-}
-// Add Function (Add Word)
-void addword(string word[], int &currentcout, string fileName) {
-  int count;
-  displayFram("ADD_WORDS");
-  input(count, "How many words you want to add? : ");
+  // Write each word to the file
   for (int i = 0; i < count; i++) {
-    cout << "Word [" << currentcout + 1 << "] :";
-    cin >> word[currentcout];
-    currentcout++;
+    // Validate the word
+    for (char c : words[i]) {
+      if (!isalpha(c)) {
+        cout << "Invalid word: " << words[i] << "! Please enter letters only." << endl;
+        file.close();  // Close file before returning
+        return;        // Exit if the word is invalid
+      }
+    }
+    file << words[i] << endl;  // Write the word to the file
   }
-  addWordToFile(fileName);
-  messageSuccess("ADD");
+
+  file.close();                                           // Close the file
+  messageSuccess("Words written to file");  // Confirmation message
+}
+
+// Add Function (Add Words)
+void addword(string words[], int &currentCount, const string &fileName,const int MAX_WORDS) {
+  int count;
+  input(count,"How many words do you want to add? : ");
+
+  // Validate that the total words will not exceed MAX_WORDS
+  if (currentCount + count > MAX_WORDS) {
+    messageFailValidationWord(MAX_WORDS);
+    return;
+  }
+
+  // Read new words from user
+  for (int i = 0; i < count; i++) {
+    cout << "Word [" << currentCount + 1 << "]: ";
+    cin >> words[currentCount];  // Get the new word
+    currentCount++;              // Increment the current word count
+  }
+
+  writeWordToFile(fileName, words + (currentCount - count),
+                  count);                       // Write only the new words to the file
+  messageSuccess("ADD ");  // Confirmation message
 }
 // Display Function
 void displayWord(string word[], int &currentcout) {
@@ -516,7 +534,7 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
         arr[i] = arr[i + 1];
       }
       count--;
-    } else if (verify = 'N', verify = 'n') {
+    } else if (verify == 'N' || verify == 'n') {
       messageFailDeleteWord(arr[index]);
     }
   } else {
@@ -530,7 +548,7 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
 int loadWords(const string &filePath, string words[], const int MAX_WORDS) {
   ifstream file(filePath);
   if (!file.is_open()) {
-    cerr << "Error: Unable to open file \"" << filePath << "\"." << endl;
+    messageFailErrorFile();
     return 0;
   }
 
@@ -541,7 +559,6 @@ int loadWords(const string &filePath, string words[], const int MAX_WORDS) {
   file.close();
   return wordCount;
 }
-
 // Select a random word
 string selectRandomWord(string words[], int wordCount) {
   srand(time(0));
@@ -569,28 +586,26 @@ void displayProgress(const string &secretWord, const string &guessedLetters) {
   }
   cout << endl;  // Move to the next line after displaying the progress
 }
-void playGuessingGame(const int MAX_WORDS, const string fileWord) {
-  string words[MAX_WORDS];
+void playGuessingGame(string words[], const int MAX_WORDS, const string fileWord) {
   string guessedLetters;
   int wordCount = loadWords(fileWord, words, MAX_WORDS);
 
   if (wordCount == 0) {
-    cerr << "Error: No words found in the file." << endl;
+    
     return;
   }
 
   string secretWord = selectRandomWord(words, wordCount);
   int attempts = 6;
 
-  cout << "Welcome to the Guessing Word Game!" << endl;
+  messageWelconmeToGame();
 
   while (attempts > 0) {
     displayProgress(secretWord, guessedLetters);
-    cout << "Attempts left: " << attempts << endl;
+    messageAttemptsLeft(attempts);
 
     string guess;
-    cout << "Guess a word: ";
-    cin >> guess;
+    input(guess,"Guess a word: ");
 
     // Validate the guess for alphabetic characters
     bool isValid = true;
@@ -602,7 +617,7 @@ void playGuessingGame(const int MAX_WORDS, const string fileWord) {
     }
 
     if (!isValid) {
-      cerr << "Error: Invalid word! Please enter letters only." << endl;
+      messageFailInvalidWord();
       continue;
     }
 
@@ -622,13 +637,13 @@ void playGuessingGame(const int MAX_WORDS, const string fileWord) {
 
     // Check if the guess matches the secret word
     if (guess == secretWord) {
-      cout << "\nCongratulations! You've guessed the word: " << secretWord << endl;
+      messageSuccessGuess(secretWord);
       return;
     } else {
-      cout << "Sorry, that word is not correct." << endl;
+      messageFailGuess();
       attempts--;
     }
   }
 
-  cout << "\nSorry, you've run out of attempts. The word was: " << secretWord << endl;
+  messageFailAttempts(secretWord);
 }

@@ -7,7 +7,7 @@ void runningApp() {
   User user[MAX_USERS];
   string word[MAX_WORDS];
   int userCount;
-  int wordCount = 0;
+  int wordCount;
   string fileUser = "user.bat";
   string fileWord = "words.txt";
 
@@ -24,6 +24,7 @@ void runningApp() {
         int choise;
         displayFram("LOGIN_MENU");
         readUsersFromFile(user,userCount,fileUser,MAX_USERS);
+        wordCount = loadWords(fileWord,word,MAX_WORDS);
         input(username,"Enter username: ");
         input(password, "Enter password: ");
         if (login(user, username, password, userCount)) {
