@@ -35,34 +35,30 @@ void input(T &inPut, const string &text) {
   cin.ignore(numeric_limits<streamsize>::max(),
              '\n');  // (For switching between different tpye of input int, string)
 }
+/********************************* Namespace For Account *********************************/
 // Use Namespace For Account:
 namespace account {
 void addUser(User user[], int &userCount, int maxUsers) {
-  int count = 1;
-  displayfram("REGISTER");
+  displayFram("REGISTER");
+  input(user[userCount].name, " Name: ");
+  input(user[userCount].username, " Username: ");
+  input(user[userCount].password, " Password: ");
+  input(user[userCount].id, " ID: ");
+  displayRole();
+  do {
+    input(user[userCount].role, "Choose role: ");
+    if (user[userCount].role != 1 && user[userCount].role != 2) {
+      cout << RED << "Invalid input" << RESET << endl;
+    }
 
-  for (int i = 0; i < count; i++) {
-    input(user[userCount].name, " Name: ");
-    input(user[userCount].username, " Username: ");
-    input(user[userCount].password, " Password: ");
-    input(user[userCount].id, " ID: ");
-    displayRole();
-    do {
-      input(user[userCount].role, "Choose role: ");
-      if (user[userCount].role != 1 && user[userCount].role != 2) {
-        cout << RED << "Invalid input" << RESET << endl;
-      }
-
-    } while (user[userCount].role != 1 && user[userCount].role != 2);
-
-    cout << BRIGHT_BLUE << "------------------------" << RESET << endl;
-    cout << GREEN << "Register Successful!!" << RESET << endl;
-    userCount++;
-  }
+  } while (user[userCount].role != 1 && user[userCount].role != 2);
+  displayLine();
+  cout << GREEN << "Register Successful!!" << RESET << endl;
+  userCount++;
 }
 
 void displayUser(User user[], int count) {
-  cout << BRIGHT_BLUE << "=========== USER INFOMATTIONS ==========" << RESET << endl;
+  displayFram("USER INFOMATTIONS");
   cout << "ID\t" << "Name\t  " << "Username\t" << "Role" << endl;
   cout << BRIGHT_BLUE << "========================================" << RESET << endl;
   for (int i = 0; i < count; i++) {
@@ -79,7 +75,7 @@ void displayUser(User user[], int count) {
   cout << GREEN << "Display Successful!!" << endl;
 }
 void displayEachUser(User user[], int index) {
-  cout << BRIGHT_BLUE << "===========USER INFOMATTIONS==========" << RESET << endl;
+  displayFram("USER INFOMATTIONS");
   cout << "   Name: \t" << user[index].name << endl;
   cout << "   ID: \t\t" << user[index].id << endl;
   cout << "   Username: \t" << user[index].username << endl;
@@ -190,15 +186,12 @@ void shortFunction(User user[], int count, int key, int shortBy) {
     }
   }
 }
-
-};  // namespace account
-
 // Deleted Function (User by id)
 void deleteUser(User users[], int &count) {
   bool userDelete = false;
   int id;
   char verify;
-  displayfram("DELETE");
+  displayFram("DELETE");
   input(id, "Enter the ID of the User to delete:");
   for (int i = 0; i < count; i++) {
     if (users[i].id == id) {
@@ -217,14 +210,16 @@ void deleteUser(User users[], int &count) {
   if (!userDelete) {
     cout << RED << "User not found!\n" << RESET << endl;
   }
-};  // namespace account
+}
+};
 
+/********************************* Namespace For Word *********************************/
 // Use Namespace For Word Feature:
 namespace word {
 // Add Function (Add Word)
 void addword(string word[], int &currentcout) {
   int count;
-  displayfram("ADD_WORDS");
+  displayFram("ADD_WORDS");
   input(count, "How many words you want to add? : ");
   for (int i = 0; i < count; i++) {
     cout << "Word [" << currentcout + 1 << "] :";
@@ -235,7 +230,7 @@ void addword(string word[], int &currentcout) {
 }
 // Display Function
 void displayWord(string word[], int &currentcout) {
-  cout << BRIGHT_BLUE << "=======LIST_WORDS=======" << RESET << endl;
+  displayFram("LIST_WORD");
   for (int i = 0; i < currentcout; i++) {
     cout << i + 1 << ". " << word[i] << endl;
   }
@@ -296,4 +291,4 @@ void deleteFunction(string arr[], int &count, string deleteKey) {
     cout << RED << arr[index] << "  not found\n" << RESET << endl;
   }
 }
-};  // namespace word
+};

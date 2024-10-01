@@ -52,25 +52,27 @@ void displayEditMenu() {
   cout << " 1. Name" << endl;
   cout << " 2. ID\n" << endl;
 }
-void displayShort(){
+void displayShort() {
   displayfram("SHORT");
-  cout<<"Do you want to short?"<<endl;
-  cout<<"1. Increase"<<endl;
-  cout<<"2. Discerease"<<endl;
+  cout << "Do you want to short?" << endl;
+  cout << "1. Increase" << endl;
+  cout << "2. Discerease" << endl;
 }
 void displayShortMenu(int choice) {
   if (choice == 1) {
-    cout<<"SHORT_INCREASE"<<endl;;
+    cout << "SHORT_INCREASE" << endl;
+    ;
     cout << "What do you want to short?" << endl;
     cout << "1. Name" << endl;
     cout << "2. ID\n" << endl;
   } else if (choice == 2) {
-    cout<<"SHORT_DISCREASE"<<endl;
+    cout << "SHORT_DISCREASE" << endl;
     cout << "What do you want to short?" << endl;
     cout << "1. Name" << endl;
     cout << "2. ID\n" << endl;
-  }else{
-    cout<<RED<<"Invalid Choice"<<RESET<<endl;;
+  } else {
+    cout << RED << "Invalid Choice" << RESET << endl;
+    ;
   }
 }
 

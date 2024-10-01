@@ -18,14 +18,11 @@ void runningApp() {
       case REGISTER:
         addUser(user, userCount, MAX_USERS);
         break;
-      case 6:
-        displayUser(user, userCount);
-        break;
       case LOGIN: {
         string username, password;
         int control;
         int choise;
-        displayfram("LOGIN_MENU");
+        displayFram("LOGIN_MENU");
         input(username,"Enter username: ");
         input(password, "Enter password: ");
         if (login(user, username, password, userCount)) {

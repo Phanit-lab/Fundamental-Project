@@ -1,0 +1,8 @@
+improve code
+    1. The main function should have only the function (completed)
+    2. Using namespace to separate Word control and Account control (completed)
+    3. Clarify The Delete(completed)
+    4. Shot from big to small or small (completed)
+    5. Validate input(completed)
+    6. Create a Function Message. (completed)
+    7. Create Guessing Gameplay(there have a little error.(completed)
